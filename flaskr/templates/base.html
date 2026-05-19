@@ -1,0 +1,31 @@
+<!--
+  文章5: Templates
+  基础布局模板：所有页面的公共结构
+-->
+<!doctype html>
+<title>{% block title %}{% endblock %} - Flaskr</title>
+<!-- 文章5: 引入 static/style.css -->
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<nav>
+  <h1>Flaskr</h1>
+  <ul>
+    <!-- 文章4/5: 根据 g.user 是否存在显示不同导航链接 -->
+    {% if g.user %}
+      <li><span>{{ g.user['username'] }}</span>
+      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+    {% else %}
+      <li><a href="{{ url_for('auth.register') }}">Register</a>
+      <li><a href="{{ url_for('auth.login') }}">Log In</a>
+    {% endif %}
+  </ul>
+</nav>
+<section class="content">
+  <header>
+    {% block header %}{% endblock %}
+  </header>
+  <!-- 文章4/5: 显示 flash 消息（错误/成功提示） -->
+  {% for message in get_flashed_messages() %}
+    <div class="flash">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</section>

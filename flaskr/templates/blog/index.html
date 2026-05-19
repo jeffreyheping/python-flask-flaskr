@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Posts{% endblock %}</h1>
+  <!-- 文章7: 登录用户显示"新建"链接 -->
+  {% if g.user %}
+    <a class="action" href="{{ url_for('blog.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for post in posts %}
+    <article class="post">
+      <header>
+        <div>
+          <h1>{{ post['title'] }}</h1>
+          <!-- 文章7: 显示作者用户名和发布时间 -->
+          <div class="about">by {{ post['username'] }} on {{ post['created'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        <!-- 文章7: 仅文章作者看到"编辑"链接 -->
+        {% if g.user['id'] == post['author_id'] %}
+          <a class="action" href="{{ url_for('blog.update', id=post['id']) }}">Edit</a>
+        {% endif %}
+      </header>
+      <p class="body">{{ post['body'] }}</p>
+    </article>
+    <!-- 文章7: 除最后一篇外，每篇后加分隔线 -->
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
